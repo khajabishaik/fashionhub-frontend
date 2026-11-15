@@ -1263,3 +1263,23 @@ nav a:hover {
     max-width: none;
   }
 }
+
+.favorites-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.favorite-count {
+  background-color: #b76e79;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}

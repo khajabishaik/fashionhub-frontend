@@ -1,11 +1,13 @@
-
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loadUserFavorites } from "../features/favoriteSlice";
 import api from "../services/api";
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,22 +17,37 @@ function Login() {
     e.preventDefault();
     setError("");
 
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
+      // 1. Check backend server
       const response = await api.get("/users", {
         params: {
-          email: email.trim().toLowerCase(),
+          email: cleanEmail,
           password
         }
       });
 
-      if (response.data.length > 0) {
-        localStorage.setItem(
-          "user",
-          JSON.stringify(response.data[0])
+      let loggedInUser = response.data[0];
+
+      // 2. If server restarted and wiped temporary db.json, check local backup
+      if (!loggedInUser) {
+        const localUsers = JSON.parse(localStorage.getItem("fashionHubRegisteredUsers")) || [];
+        const backupUser = localUsers.find(
+          (u) => u.email === cleanEmail && u.password === password
         );
 
+        if (backupUser) {
+          // Re-sync user back to server so API stays up to date
+          const synced = await api.post("/users", backupUser);
+          loggedInUser = synced.data || backupUser;
+        }
+      }
+
+      if (loggedInUser) {
+        localStorage.setItem("user", JSON.stringify(loggedInUser));
+        dispatch(loadUserFavorites());
         navigate("/");
-        window.location.reload();
       } else {
         setError("Invalid email or password.");
       }

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -33,22 +32,37 @@ function Register() {
         return;
       }
 
+      // 1. Check local backup first so duplicate emails are never allowed
+      const localUsers = JSON.parse(localStorage.getItem("fashionHubRegisteredUsers")) || [];
+      if (localUsers.some((u) => u.email === email)) {
+        setError("This email is already registered. Please login.");
+        return;
+      }
+
+      // 2. Check backend server
       const response = await api.get("/users", {
         params: { email }
       });
 
       if (response.data.length > 0) {
-        setError("This email is already registered.");
+        setError("This email is already registered. Please login.");
         return;
       }
 
-      await api.post("/users", {
-        ...user,
+      const newUser = {
         name: user.name.trim(),
-        email
-      });
+        email,
+        password: user.password
+      };
 
-      navigate("/login");
+      // 3. Save to backend server AND local backup
+      const created = await api.post("/users", newUser);
+      localUsers.push(created.data || newUser);
+      localStorage.setItem("fashionHubRegisteredUsers", JSON.stringify(localUsers));
+
+      navigate("/login", {
+        state: { message: "Account created successfully! Please login." }
+      });
     } catch (err) {
       setError("Registration failed. Please try again.");
     }
