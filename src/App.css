@@ -1,0 +1,96 @@
+
+/* Day 5 - Fashion Hub Search, Filters and Sorting */
+
+.products-filters {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 30px auto 18px;
+  padding: 20px;
+  background: #fffaf4;
+  border: 1px solid #ead8c5;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(110, 72, 43, 0.07);
+}
+
+.products-filters input,
+.products-filters select {
+  padding: 13px 16px;
+  min-width: 190px;
+  border: 1px solid #ddc5aa;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #60432f;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.products-filters input {
+  flex: 1;
+  max-width: 280px;
+}
+
+.products-filters input::placeholder {
+  color: #a18a76;
+}
+
+.products-filters input:focus,
+.products-filters select:focus {
+  border-color: #95643e;
+  box-shadow: 0 0 0 3px rgba(149, 100, 62, 0.12);
+}
+
+.products-filters input:hover,
+.products-filters select:hover {
+  border-color: #b88958;
+}
+
+.reset-filters-btn {
+  padding: 13px 22px;
+  border: none;
+  border-radius: 9px;
+  background: #8b5a36;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-filters-btn:hover {
+  background: #694027;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(105, 64, 39, 0.18);
+}
+
+.products-count {
+  max-width: 1200px;
+  margin: 15px auto 25px;
+  padding: 0 20px;
+  color: #806047;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .products-filters {
+    flex-direction: column;
+    align-items: stretch;
+    margin: 20px 15px;
+    padding: 16px;
+  }
+
+  .products-filters input,
+  .products-filters select {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+  }
+
+  .reset-filters-btn {
+    width: 100%;
+  }
+}
